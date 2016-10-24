@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.4/nv.d3.css" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.4/nv.d3.js"></script>
+    <style>
+      #chart svg {
+        height: 400px;
+      }
+    </style>
+</head>
+<body>
+  <nav class='navbar navbar-default' id='navbar'>
+    <section class='container-fluid'>
+      <section class='navbar-header' id='nav-header-block'>
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-links-block" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class='navbar-brand' href='/'>Leverage</a>
+      </section>
+      <section class='collapse navbar-collapse' id='nav-links-block'>
+        <ul class='nav navbar-nav' id='nav-links'>
+          <li><a href='/'>Discover data</a></li>
+          <li><a href='/getting-started.html'>Getting started</a></li>
+          <li><a href='/about.html'>About Leverage</a></li>
+        </ul>
+      </section>
+    </section>
+  </nav>
+<!-- chart code -->
+<div id="chart">
+  <svg></svg>
+</div>
+<script>
+  var data = [
+    {
+      "key" : "Donations",
+      "bar": true,
+      "values" : [[ 5 , 2000] ,
+                  [ 10 , 400] ,
+                  [ 20 , 75] ,
+                  [ 50 , 35] ,
+                  [ 100 , 20] ,
+                  [ 250 , 12]]
+    }
+  ]
+
+  nv.addGraph(function() {
+      var chart = nv.models.linePlusBarChart()
+        .margin({top: 30, right: 60, bottom: 50, left: 70})
+        .x(function(d,i) { return i })
+        .y(function(d,i) { return d[1] })
+        .options({focusEnable: false})
+        .showLegend(false)
+        .color(d3.scale.category10().range())
+        ;
+
+      chart.xAxis
+        .axisLabel('Donation Amount')
+        .showMaxMin(false)
+        .tickFormat(function(d) {
+          return data[0].values[d] && data[0].values[d][0];
+        });
+
+      chart.y1Axis
+        .tickFormat(d3.format(',f'));
+
+      chart.bars.forceY([0]);
+
+      d3.select('#chart svg')
+        .datum(data)
+        .transition().duration(500)
+        .call(chart);
+
+      nv.utils.windowResize(chart.update);
+
+      return chart;
+  });
+</script>
+<!-- endof chart code -->
+</body>
+</html>
